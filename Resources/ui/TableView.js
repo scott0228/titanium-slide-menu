@@ -1,4 +1,4 @@
-exports.TableView = function() {
+module.exports = function() {
 
     var rows = [
         {title:'Row 1', hasChild:true},
@@ -8,7 +8,8 @@ exports.TableView = function() {
     ];
     // 先ほどのデータに基づいてTable Viewを起こします。
     var self = Ti.UI.createTableView({
-        data: rows
+        data: rows,
+        title: 'TableView',
     });
     return self;
 };

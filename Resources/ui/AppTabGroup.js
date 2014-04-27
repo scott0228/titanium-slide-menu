@@ -1,4 +1,4 @@
-exports.AppTabGroup = function() { 
+module.exports = function() { 
 
     // tab group
     var self = Ti.UI.createTabGroup();

@@ -1,52 +1,61 @@
-if(Ti.version < 1.8) {
-    alert('Sorry, this applicatio is for Titanium Mobile 1.8 or later');
+if (Ti.version < 1.8) {
+	alert('Sorry, this applicatio is for Titanium Mobile 1.8 or later');
 } else {
 
-    // add a single variable to the global scope 
-    var globals = {};
+	// add a single variable to the global scope
+	var globals = {};
 
-    (function() {
-        var AppTabGroup = require('ui/AppTabGroup').AppTabGroup;
-        var AppWindow = require('ui/AppWindow').AppWindow;
-        var AppView = require('ui/AppView').AppView;
-        var LeftView = require('ui/LeftView').LeftView;
-        var HomeView = require('ui/HomeView').HomeView;
-        var TableView = require('ui/TableView').TableView;
+	(function() {
+		var theTop = 0;
+		if (Titanium.Platform.name == 'iPhone OS') {
+			var version = Titanium.Platform.version.split(".");
+			var major = parseInt(version[0], 10);
 
+			if (major >= 7) {
+				theTop = 20;
+			}
+		}
+		
+		
+		var AppWindow = require('/ui/AppWindow');
+		var AppView = require('/ui/AppView');
+		var LeftView = require('/ui/LeftView');
 
-        // App View
-        var appView = new AppView();
+		var appView = new AppView();
+		var leftView = new LeftView();
+		var win = new AppWindow();
+		win.add(appView);
+		win.add(leftView);
+		win.backgroundColor = '#FFF';
+		appView.top = theTop;
+		leftView.top = theTop;
 
-        // Left view
-        var leftView = new LeftView();
-        leftView.addMenu('Home', '#c4ccda', function() {
-            var homeView = new HomeView();
-            appView.switchView(homeView);
-        });
-        leftView.addMenu('Table', '#c4ccda', function() {
-            var tableView = new TableView();
-            appView.switchView(tableView);
-        });
-        leftView.addMenu('Settings', '#c4ccda', function(){
-            alert('Settings');
-            appView.openClose();
-        });
+		appView.addMenu = function(obj, title) {
+			if ((typeof(obj)==='function') && obj.constructor.toString().match(/Function/)) {
+				leftView.addMenu(title, '#c4ccda', function() {
+					obj();
+					appView.openCloseLeft();
+				});
+			} else {
+				leftView.addMenu(obj.title, '#c4ccda', function() {
+					appView.switchView(obj);
+				});
+			}
+		};
+		
+		
+		var HomeView = require('/ui/HomeView');
+		var TableView = require('/ui/TableView');
+		var home = new HomeView();
+		appView.addMenu(home);
+		var tableView = new TableView();
+		appView.addMenu(tableView);
+		appView.addMenu(function() {
+			alert("Settings");
+		}, 'Settings');
 
+		win.open();
 
-        // App widow
-        win = new AppWindow();
-        win.add(appView);
-        win.add(leftView);
-
-        // create our global tab group
-        globals.tabs = new AppTabGroup({
-            window: win
-        });
-
-        // tab open
-        globals.tabs.open();
-
-    })();
-
+	})();
 
 }

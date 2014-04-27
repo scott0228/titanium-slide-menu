@@ -1,17 +1,15 @@
-exports.AppWindow = function() {
-    var self = Ti.UI.createWindow({
-        modal: false,
-        title: 'Main Window',
-        backgroundColor: '#000'
-    });
+module.exports = function() {
+  var self = Ti.UI.createWindow({
+    modal: false,
+    title: 'Main Window',
+    backgroundColor: '#000'
+  });
 
-    // 右ボタン
+  // 右ボタン
 
-    // hide tab bar
-    self.hideTabBar();
-    self.navBarHidden = true;
+  // hide tab bar
+  //self.hideTabBar();
+  self.navBarHidden = true;
 
-    return self;
+  return self;
 };
-
-
